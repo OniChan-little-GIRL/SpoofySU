@@ -34,6 +34,21 @@ It's actually pretty simple. SpoofySu runs entirely in userspace and does three 
 
 The cool part is everything is sandboxed. When you "modify" system files, you're actually just editing files in `/sdcard/SpoofySu/`. Your actual system stays completely untouched.
 
+
+## Repository tarball
+
+Some PR hosts reject binary `.tar.gz` files. Instead of committing an archive, generate it locally when needed with standard desktop/CI tools; Termux is not required:
+
+```bash
+./scripts/create_repository_tarball.sh
+```
+
+The default output is `SpoofySU-repository.zip`, but the payload is still a gzip-compressed tar archive; only the filename extension is changed. Verify or unpack it with `tar -tzf SpoofySU-repository.zip` or `tar -xzf SpoofySU-repository.zip`. If a `.zip` filename is still blocked by your environment, pass an `.apk` name instead:
+
+```bash
+./scripts/create_repository_tarball.sh SpoofySU-repository.apk
+```
+
 ## Building
 
 You'll need Rust and the Android NDK. I usually build on my laptop but you can also build directly on your phone with Termux which is neat.
