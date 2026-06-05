@@ -1,0 +1,3 @@
+# Generated archive artifacts should never be included in repository snapshots.
+SpoofySU-repository.tar.gz export-ignore
+SpoofySU-repository.tar.gz.sha256 export-ignore
