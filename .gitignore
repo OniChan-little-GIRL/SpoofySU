@@ -360,3 +360,11 @@ target/
 
 su
 libfakeroot.so
+
+# Generated repository tarball artifacts (tar.gz payload may be named .zip/.apk)
+SpoofySU-repository.zip
+SpoofySU-repository.zip.sha256
+SpoofySU-repository.apk
+SpoofySU-repository.apk.sha256
+SpoofySU-repository.tar.gz
+SpoofySU-repository.tar.gz.sha256
