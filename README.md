@@ -37,13 +37,24 @@ The cool part is everything is sandboxed. When you "modify" system files, you're
 
 ## Repository tarball
 
-Some PR hosts reject binary `.tar.gz` files. Instead of committing an archive, generate it locally when needed with standard desktop/CI tools; Termux is not required:
+Some PR hosts reject binary `.tar.gz` files. Instead of committing an archive, generate it through GitHub Actions or locally with standard desktop/CI tools; Termux is not required.
+
+### GitHub Actions
+
+1. Open **Actions** in GitHub.
+2. Select the **Repository Tarball** workflow.
+3. Click **Run workflow** and keep `zip` as the output extension.
+4. Download the uploaded artifact when the workflow finishes.
+
+The uploaded `SpoofySU-repository.zip` payload is still a gzip-compressed tar archive; only the filename extension is changed. Verify or unpack it with `tar -tzf SpoofySU-repository.zip` or `tar -xzf SpoofySU-repository.zip`. If a `.zip` filename is still blocked by your environment, rerun the workflow with `apk` as the output extension.
+
+### Local fallback
 
 ```bash
 ./scripts/create_repository_tarball.sh
 ```
 
-The default output is `SpoofySU-repository.zip`, but the payload is still a gzip-compressed tar archive; only the filename extension is changed. Verify or unpack it with `tar -tzf SpoofySU-repository.zip` or `tar -xzf SpoofySU-repository.zip`. If a `.zip` filename is still blocked by your environment, pass an `.apk` name instead:
+To create the `.apk`-named fallback locally instead:
 
 ```bash
 ./scripts/create_repository_tarball.sh SpoofySU-repository.apk

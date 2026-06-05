@@ -1,0 +1,49 @@
+name: Repository Tarball
+
+on:
+  workflow_dispatch:
+    inputs:
+      output_extension:
+        description: File extension to use for the tar.gz payload
+        required: true
+        default: zip
+        type: choice
+        options:
+          - zip
+          - apk
+
+permissions:
+  contents: read
+
+jobs:
+  create-tarball:
+    name: Create repository tarball
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create disguised tarball
+        run: ./scripts/create_repository_tarball.sh "SpoofySU-repository.${{ inputs.output_extension }}"
+
+      - name: Verify tarball contents
+        run: |
+          tar -tzf "SpoofySU-repository.${{ inputs.output_extension }}" | sed -n '1,24p'
+          if tar -tzf "SpoofySU-repository.${{ inputs.output_extension }}" | rg 'SpoofySU-repository\.(tar\.gz|zip|apk)' >/dev/null; then
+            echo 'Generated archive artifact leaked into repository tarball.' >&2
+            exit 1
+          fi
+
+      - name: Verify checksum
+        run: sha256sum -c "SpoofySU-repository.${{ inputs.output_extension }}.sha256"
+
+      - name: Upload tarball artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SpoofySU-repository-${{ inputs.output_extension }}-${{ github.sha }}
+          path: |
+            SpoofySU-repository.${{ inputs.output_extension }}
+            SpoofySU-repository.${{ inputs.output_extension }}.sha256
+          if-no-files-found: error
+          retention-days: 14
