@@ -1,0 +1,40 @@
+name: Repository Tarball
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  create-tarball:
+    name: Create repository tarball
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create tarball
+        run: ./scripts/create_repository_tarball.sh
+
+      - name: Verify tarball contents
+        run: |
+          tar -tzf SpoofySU-repository.tar.gz | sed -n '1,24p'
+          if tar -tzf SpoofySU-repository.tar.gz | rg 'SpoofySU-repository\.tar\.gz(\.sha256)?$' >/dev/null; then
+            echo 'Generated archive artifact leaked into repository tarball.' >&2
+            exit 1
+          fi
+
+      - name: Verify checksum
+        run: sha256sum -c SpoofySU-repository.tar.gz.sha256
+
+      - name: Upload tarball artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SpoofySU-repository-tarball-${{ github.sha }}
+          path: |
+            SpoofySU-repository.tar.gz
+            SpoofySU-repository.tar.gz.sha256
+          if-no-files-found: error
+          retention-days: 14

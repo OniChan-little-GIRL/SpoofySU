@@ -34,6 +34,27 @@ It's actually pretty simple. SpoofySu runs entirely in userspace and does three 
 
 The cool part is everything is sandboxed. When you "modify" system files, you're actually just editing files in `/sdcard/SpoofySu/`. Your actual system stays completely untouched.
 
+
+## Repository tarball
+
+Generated archives should not be committed to the repository. To create a clean `SpoofySU-repository.tar.gz` tarball, run the GitHub Actions workflow instead.
+
+### GitHub Actions
+
+1. Open **Actions** in GitHub.
+2. Select the **Repository Tarball** workflow.
+3. Click **Run workflow**.
+4. Download the uploaded artifact when the workflow finishes.
+5. Extract the downloaded artifact and use `SpoofySU-repository.tar.gz` plus `SpoofySU-repository.tar.gz.sha256`.
+
+Verify or unpack the tarball with `tar -tzf SpoofySU-repository.tar.gz` or `tar -xzf SpoofySU-repository.tar.gz`. Verify the checksum with `sha256sum -c SpoofySU-repository.tar.gz.sha256`.
+
+### Local fallback
+
+```bash
+./scripts/create_repository_tarball.sh
+```
+
 ## Building
 
 You'll need Rust and the Android NDK. I usually build on my laptop but you can also build directly on your phone with Termux which is neat.
